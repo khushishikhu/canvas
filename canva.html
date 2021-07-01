@@ -1,19 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-	<!-- Meta -->
-	<meta charset="UTF-8">
-	<meta name="description" content="Generates random particles using HTML5 experiment canvas" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" type="text/css" media="all" href="css/reset.css" /> <!-- reset css -->
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 
-	<title>Particles [Canvas]</title>
+<style>
+    body{ background-color: ivory; }
+    canvas{border:1px solid red;}
+</style>
 
-	<!-- Favicon -->
-	<link rel="shortcut icon" href="http://raphamorim.com/assets/images/favicon.ico" type="image/x-icon" />
+<script>
+$(function(){
+
+
+    var img = new Image();
+    img.onload = function(){
+        ctx.drawImage(img, 0,0);
+    };
+    img.src = "profile.jpg";
+
+    var canvas=document.getElementById("canvas");
+    var ctx=canvas.getContext("2d");
+    var canvasOffset=$("#canvas").offset();
+    var offsetX=canvasOffset.left;
+    var offsetY=canvasOffset.top;
+    var canvasWidth=canvas.width;
+    var canvasHeight=canvas.height;
+    var isDragging=false;
+
+    function handleMouseDown(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // set the drag flag
+      isDragging=true;
+    }
+
+    function handleMouseUp(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // clear the drag flag
+      isDragging=false;
+    }
+
+    function handleMouseOut(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // user has left the canvas, so clear the drag flag
+      //isDragging=false;
+    }
+
+    function handleMouseMove(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // if the drag flag is set, clear the canvas and draw the image
+      if(isDragging){
+          ctx.clearRect(0,0,canvasWidth,canvasHeight);
+          ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2,128,120);
+      }
+    }
+
+    $("#canvas").mousedown(function(e){handleMouseDown(e);});
+    $("#canvas").mousemove(function(e){handleMouseMove(e);});
+    $("#canvas").mouseup(function(e){handleMouseUp(e);});
+    $("#canvas").mouseout(function(e){handleMouseOut(e);});
+
+}); // end $(function(){});
+</script>
+
 </head>
-<body>
-	<canvas id='particles'></canvas>
 
-	<script src="/particles.js"></script>
+<body>
+    <canvas id="canvas" width=1000 height=300></canvas>
 </body>
 </html>
